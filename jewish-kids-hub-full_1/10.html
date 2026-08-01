@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KKA Episode 10 — Coming Tu B'Av! — Jewish Kids Hub</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jewish-kids-hub-default-rtdb.asia-southeast1.firebasedatabase.app">
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .countdown-hero{position:relative; overflow:hidden; text-align:center; padding:60px 24px 50px;}
+  .countdown-logo{width:96px; height:96px; border-radius:50%; margin:0 auto 16px; box-shadow:var(--shadow); animation:floaty 4s ease-in-out infinite; object-fit:cover;}
+  .countdown-eyebrow{display:inline-block; background:#FFE4CC; color:var(--accent); font-weight:800; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; padding:6px 16px; border-radius:999px; margin-bottom:16px; animation:pulseSoft 2.4s ease-in-out infinite;}
+  .countdown-hero h1{font-size:clamp(1.8rem,4.5vw,3rem); margin-bottom:10px;}
+  .countdown-hero h1 span{color:var(--primary);}
+  .countdown-sub{color:var(--fg-soft); font-size:1rem; max-width:520px; margin:0 auto 8px;}
+  .countdown-date{font-weight:800; color:var(--accent); font-size:1.05rem; margin-bottom:34px;}
+
+  .countdown-grid{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:36px;}
+  .countdown-unit{background:#fff; border-radius:18px; box-shadow:var(--shadow); padding:18px 10px; width:96px; text-align:center;}
+  .countdown-unit b{display:block; font-family:'Fredoka'; font-size:2.1rem; color:var(--fg); line-height:1;}
+  .countdown-unit span{display:block; font-size:.72rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--fg-soft); margin-top:6px;}
+
+  #liveState{display:none;}
+  #liveState .badge-welcome{animation:pulseSoft 1.6s ease-in-out infinite;}
+
+  .countdown-thumb{max-width:560px; margin:0 auto; border-radius:24px; overflow:hidden; box-shadow:var(--shadow); aspect-ratio:16/9; background:linear-gradient(135deg,var(--secondary),var(--primary)); display:flex; align-items:center; justify-content:center; position:relative;}
+  .countdown-thumb .stamp{position:absolute; width:84px; height:84px; border:3px dashed rgba(255,255,255,0.85); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Fredoka'; font-weight:700; transform:rotate(-10deg); font-size:.95rem; text-align:center; line-height:1.15;}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navinner">
+    <a class="navbrand" href="/index.html"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><span>Jewish Kids Hub</span></a>
+    <button id="navToggle">☰</button>
+    <div class="navlinks" id="navlinks">
+      <a href="/index.html" data-page="home">Home</a>
+      <a href="/kka.html" data-page="kka">Kids Kan Akomplish</a>
+      <a href="/nach-heroes.html" data-page="nach">Nach Heroes</a>
+      <a href="/halachos.html" data-page="halachos">Halachos</a>
+      <a href="/magazine.html" data-page="magazine">Magazine</a>
+      <a href="/moshiach.html" data-page="moshiach">Moshiach is in our hands</a>
+      <a href="/contact.html" data-page="contact">Contact</a>
+      <div class="nav-user-container" id="authNavContainer">
+        <button class="nav-signin-btn" id="navSignInBtn">👤 Sign In</button>
+        <div class="nav-user-menu" id="navUserMenu">
+          <a href="/profile.html">My Profile</a>
+          <button onclick="handleSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="page-enter">
+  <div class="countdown-hero">
+    <div class="orb o1" style="width:280px;height:280px;background:var(--primary); top:-100px; left:-80px;"></div>
+    <div class="orb o2" style="width:220px;height:220px;background:var(--secondary); bottom:-80px; right:-60px;"></div>
+
+    <img class="countdown-logo" src="https://drive.google.com/thumbnail?id=14jlCkaLT5aGWTxU8k1yf-8VZPbYRBm6k&sz=w1000" alt="KKA logo">
+
+    <div id="waitingState">
+      <div class="countdown-eyebrow">✦ Something big is coming</div>
+      <h1>Kids Kan Akomplish <span>Episode 10</span></h1>
+      <p class="countdown-sub">Kids Kan Akomplish (KKA) is a Jewish Kids Hub video series inspired by "מפי עוללים ויונקים יסדת עוז"—showing how every Yiddishe child has the power to fill the world with Torah, mitzvos, and the light of Yiddishkeit through exciting stories and adventures. Episode 10, "Birthday," is on its way!</p>
+      <p class="countdown-date" id="targetDateLabel"></p>
+
+      <div class="countdown-grid">
+        <div class="countdown-unit"><b id="cd-days">--</b><span>Days</span></div>
+        <div class="countdown-unit"><b id="cd-hours">--</b><span>Hours</span></div>
+        <div class="countdown-unit"><b id="cd-minutes">--</b><span>Minutes</span></div>
+        <div class="countdown-unit"><b id="cd-seconds">--</b><span>Seconds</span></div>
+      </div>
+
+      <div class="countdown-thumb"><div class="stamp">EP<br>10</div></div>
+    </div>
+
+    <div id="liveState">
+      <div class="badge-welcome">🎉 It's here!</div>
+      <h1>Episode 10 is <span>live now!</span></h1>
+      <p class="countdown-sub">"Birthday" is ready to watch.</p>
+      <a class="btn btn-primary" href="/kka/episode/ep10" style="display:inline-block; margin-top:18px;">Watch Episode 10</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><strong>Jewish Kids Hub</strong></div>
+        <p>Where Yiddishe kinderlach discover the special koach Hashem gave them to fill the world with Torah and light.</p>
+        <p style="margin-top:6px;">✉ jewishkidshub@gmail.com</p>
+      </div>
+      <div>
+        <h4>Our Departments</h4>
+        <a href="/index.html">Home</a>
+        <a href="/moshiach.html">Moshiach is in our Hands</a>
+        <a href="/magazine.html">Magazine</a>
+        <a href="/kka.html">Kids Kan Akomplish</a>
+        <a href="/halachos.html">Halachos For Kids</a>
+        <a href="/nach-heroes.html">Nach Heroes</a>
+        <a href="/contact.html">Contact Us</a>
+      </div>
+      <div>
+        <h4>Join Our Mailing List</h4>
+        <p>Sign up for the Jewish Kids Hub Mailing List and never miss an update!</p>
+        <form class="foot-form" id="notifForm">
+          <input type="email" placeholder="Your email" required id="notifEmail">
+          <button class="btn" type="submit" style="padding:10px 18px;">➤</button>
+        </form>
+        <a class="foot-link-cta" href="/contact.html" style="margin-top:14px;">Send us a message →</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 5786 Jewish Kids Hub. All rights reserved. <a href="/privacy-policy.html" style="color:inherit;">Privacy Policy</a> · <a href="/terms-of-service.html" style="color:inherit;">Terms of Service</a></span>
+      <span>Made with <span class="heartbeat">♥</span> for Yiddishe Kinderlach</span>
+    </div>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="/firebase-init.js"></script>
+<script>window.CURRENT_PAGE = 'kka';</script>
+<script src="/site.js"></script>
+<script>
+// Tu B'Av 5786 (15 Av) — Wednesday, July 29, 2026, 12:00 PM AEST (Melbourne, no DST in July)
+const targetDate = new Date('2026-07-29T12:00:00+10:00').getTime();
+
+document.getElementById('targetDateLabel').textContent =
+  'Premiering Tu B\'Av — Wednesday, July 29, 2026 at 12:00 PM (Melbourne time)';
+
+function updateCountdown(){
+  const diff = targetDate - Date.now();
+  if(diff <= 0){
+    document.getElementById('waitingState').style.display = 'none';
+    document.getElementById('liveState').style.display = 'block';
+    clearInterval(timer);
+    return;
+  }
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const minutes = Math.floor((diff / (1000*60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+  document.getElementById('cd-days').textContent = days;
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-minutes').textContent = String(minutes).padStart(2,'0');
+  document.getElementById('cd-seconds').textContent = String(seconds).padStart(2,'0');
+}
+updateCountdown();
+const timer = setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

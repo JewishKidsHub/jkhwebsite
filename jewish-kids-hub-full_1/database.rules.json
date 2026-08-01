@@ -1,0 +1,63 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+
+    "videos": {
+      ".write": "auth != null && (auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+    },
+    "audio": {
+      ".write": "auth != null && (auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+    },
+    "magazines": {
+      ".write": "auth != null && (auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+    },
+    "halachos": {
+      ".write": "auth != null && (auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+    },
+    "siteImages": {
+      ".write": "auth != null && (auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+    },
+    "siteSettings": {
+      ".write": "auth != null && (auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+    },
+
+    "messages": {
+      ".write": true
+    },
+
+    "analytics": {
+      ".write": true
+    },
+
+    "magSignups": {
+      ".write": true
+    },
+    "notifications": {
+      ".write": true
+    },
+
+    "comments": {
+      "$commentId": {
+        ".write": "(auth != null && !data.exists() && newData.child('approved').val() === false) || (auth != null && data.exists() && data.child('uid').val() === auth.uid && !newData.exists()) || auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      }
+    },
+
+    "answers": {
+      "$videoId": {
+        "$childId": {
+          ".write": "auth != null && !data.exists() && newData.child('parentUid').val() === auth.uid"
+        }
+      }
+    },
+
+    "users": {
+      "$uid": {
+        ".write": "auth != null && (auth.uid === $uid || auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        "role": {
+          ".write": "auth != null && (auth.token.email === 'jewishkidshub@gmail.com' || auth.token.email === 'admin@jewishkidshub.com' || root.child('users').child(auth.uid).child('role').val() === 'admin')"
+        }
+      }
+    }
+  }
+}

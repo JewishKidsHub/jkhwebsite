@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magazine — Jewish Kids Hub</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jewish-kids-hub-default-rtdb.asia-southeast1.firebasedatabase.app">
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navinner">
+    <a class="navbrand" href="/index.html"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><span>Jewish Kids Hub</span></a>
+    <button id="navToggle">☰</button>
+    <div class="navlinks" id="navlinks">
+      <a href="/index.html" data-page="home">Home</a>
+      <a href="/kka.html" data-page="kka">Kids Kan Akomplish</a>
+      <a href="/nach-heroes.html" data-page="nach">Nach Heroes</a>
+      <a href="/halachos.html" data-page="halachos">Halachos</a>
+      <a href="/magazine.html" data-page="magazine">Magazine</a>
+      <a href="/moshiach.html" data-page="moshiach">Moshiach is in our hands</a>
+      <a href="/contact.html" data-page="contact">Contact</a>
+      <div class="nav-user-container" id="authNavContainer">
+        <button class="nav-signin-btn" id="navSignInBtn">👤 Sign In</button>
+        <div class="nav-user-menu" id="navUserMenu">
+          <a href="/profile.html">My Profile</a>
+          <button onclick="handleSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="page-enter">
+  <div class="page-header">
+    <img class="page-header-logo" data-imgkey="magazineCover" src="https://drive.google.com/thumbnail?id=11HrvC5vWJbw2UDsZcx9HUxv_VkLiShmj&sz=w1000" alt="Magazine cover">
+    <h1>JKH Magazine</h1>
+    <p>Stories, comics, activities and more — a new issue for your Yiddishe kinderlach, made with love.</p>
+  </div>
+  <div class="wrap" style="padding-bottom:60px;">
+    <div class="card-grid" id="magGrid"><div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div><div class="skeleton-card"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div></div>
+    <div class="empty-state" id="magEmpty" style="display:none;">
+      <div class="icon">📖</div>
+      <h3>First issue coming soon!</h3>
+    </div>
+
+    <div class="archive-box reveal">
+      <div class="icon">🗄️</div>
+      <h3>Past Issues Archive</h3>
+      <p id="archiveBlurb">Browse every back issue of JKH Magazine, all in one place.</p>
+      <button class="btn secondary" onclick="toast('Archive browsing coming soon!')">View Past Issues</button>
+    </div>
+
+    <div class="form-box white reveal">
+      <h3 style="margin-bottom:6px;">Get the Magazine Delivered</h3>
+      <p class="lede" style="margin-bottom:20px;">Melbourne residents only — sign up to receive your copy!</p>
+      <form id="magSignupForm">
+        <div class="form-row">
+          <div><label>First Name *</label><input required id="magFirst" placeholder="Moshe"></div>
+          <div><label>Last Name *</label><input required id="magLast" placeholder="Cohen"></div>
+        </div>
+        <div style="margin-bottom:16px;"><label>Email *</label><input type="email" required id="magEmail" placeholder="you@email.com"></div>
+        <div style="margin-bottom:16px;"><label>Street Address *</label><input required id="magStreet" placeholder="123 Main Street"></div>
+        <div style="margin-bottom:16px;"><label>Suburb</label><input id="magSuburb" placeholder="e.g. Caulfield, St Kilda..."></div>
+        <button class="btn" type="submit">Sign Up for Delivery</button>
+        <p class="form-note">Melbourne suburbs only — we'll verify your address.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><strong>Jewish Kids Hub</strong></div>
+        <p>Where Yiddishe kinderlach discover the special koach Hashem gave them to fill the world with Torah and light.</p>
+        <p style="margin-top:6px;">✉ jewishkidshub@gmail.com</p>
+      </div>
+      <div>
+        <h4>Our Departments</h4>
+        <a href="/index.html">Home</a>
+        <a href="/moshiach.html">Moshiach is in our Hands</a>
+        <a href="/magazine.html">Magazine</a>
+        <a href="/kka.html">Kids Kan Akomplish</a>
+        <a href="/halachos.html">Halachos For Kids</a>
+        <a href="/nach-heroes.html">Nach Heroes</a>
+        <a href="/contact.html">Contact Us</a>
+      </div>
+      <div>
+        <h4>Join Our Mailing List</h4>
+        <p>Sign up for the Jewish Kids Hub Mailing List and never miss an update!</p>
+        <form class="foot-form" id="notifForm">
+          <input type="email" placeholder="Your email" required id="notifEmail">
+          <button class="btn" type="submit" style="padding:10px 18px;">➤</button>
+        </form>
+        <a class="foot-link-cta" href="/contact.html" style="margin-top:14px;">Send us a message →</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 5786 Jewish Kids Hub. All rights reserved. <a href="/privacy-policy.html" style="color:inherit;">Privacy Policy</a> · <a href="/terms-of-service.html" style="color:inherit;">Terms of Service</a></span>
+      <span>Made with <span class="heartbeat">♥</span> for Yiddishe Kinderlach</span>
+    </div>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="/firebase-init.js"></script>
+<script>window.CURRENT_PAGE = 'magazine';</script>
+<script src="/site.js"></script>
+<script>
+db.ref('magazines').on('value', snap=>{
+  const list = snapToArray(snap).sort((a,b)=>(b.issue||0)-(a.issue||0));
+  document.getElementById('magEmpty').style.display = list.length ? 'none':'block';
+  document.getElementById('magGrid').innerHTML = list.map((m,i)=>`
+    <div class="card reveal" style="transition-delay:${(i%6)*0.06}s;">
+      <div class="card-thumb mag"${m.coverUrl?` style="background-image:url('${m.coverUrl}')"`:''}><div class="ep-num">ISSUE ${m.issue??'?'}</div></div>
+      <div class="card-body"><h4>${m.title||''}</h4>${synopsisHtml(m.blurb)}
+      ${m.pdfUrl?`<a class="btn secondary" style="display:inline-block;margin-top:10px;padding:8px 16px;font-size:.8rem;" href="${m.pdfUrl}" target="_blank">Read Issue</a>`:''}
+      </div></div>`).join('');
+  const arc = document.getElementById('archiveBlurb');
+  arc.textContent = list.length>1 ? `Access ${list.length-1} past issue${list.length-1===1?'':'s'} — browse the archive!` : 'Browse every back issue of JKH Magazine, all in one place.';
+  initReveal();
+});
+
+document.getElementById('magSignupForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  db.ref('magSignups').push({
+    firstName:document.getElementById('magFirst').value,
+    lastName:document.getElementById('magLast').value,
+    email:document.getElementById('magEmail').value,
+    street:document.getElementById('magStreet').value,
+    suburb:document.getElementById('magSuburb').value,
+    timestamp:Date.now()
+  }).then(()=>{ toast("You're signed up for delivery!"); e.target.reset(); })
+    .catch(err=> toast(err.message));
+});
+</script>
+</body>
+</html>

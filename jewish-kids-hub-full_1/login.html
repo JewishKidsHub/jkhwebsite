@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — Jewish Kids Hub</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jewish-kids-hub-default-rtdb.asia-southeast1.firebasedatabase.app">
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="auth-shell page-enter">
+  <div class="orb o1" style="width:320px;height:320px;background:var(--primary);top:-100px;left:-80px;"></div>
+  <div class="orb o2" style="width:260px;height:260px;background:var(--secondary);bottom:-100px;right:-60px;"></div>
+
+  <div>
+    <div class="auth-card">
+      <img class="auth-card-logo" data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo">
+      <h2 id="authTitle">Welcome Hub</h2>
+      <p class="sub" id="authSub">Sign in to save favorites and track what you're watching.</p>
+
+      <div class="auth-tabs" id="authTabs">
+        <button class="auth-tab active" id="tabSignIn" onclick="switchAuthView('signin')">Sign In</button>
+        <button class="auth-tab" id="tabSignUp" onclick="switchAuthView('signup')">Create Account</button>
+      </div>
+
+      <button class="btn google" onclick="doGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.6 6 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.8 18.9 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C34.6 6 29.6 4 24 4 16 4 9 8.5 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.2-5.1l-6.6-5.4C29.6 35.4 26.9 36 24 36c-5.3 0-9.7-3.4-11.3-8.1l-6.5 5C9 39.4 16 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.1 5.7l6.6 5.4C41.5 36 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider">or</div>
+
+      <form id="authSignInForm" class="auth-view active">
+        <label>Email Address</label>
+        <input type="email" id="siEmail" required placeholder="you@example.com">
+        <label>Password</label>
+        <input type="password" id="siPassword" required placeholder="••••••••">
+        <button class="btn" type="submit">Sign In</button>
+        <div class="auth-alt-actions">
+          <button type="button" onclick="switchAuthView('forgot')">Forgot Password?</button>
+        </div>
+      </form>
+
+      <form id="authSignUpForm" class="auth-view">
+        <div class="form-row">
+          <div><label>First Name</label><input type="text" id="suFirst" required placeholder="Moshe"></div>
+          <div><label>Last Name</label><input type="text" id="suLast" required placeholder="Cohen"></div>
+        </div>
+        <label>Email Address</label>
+        <input type="email" id="suEmail" required placeholder="you@example.com">
+        <label>Password</label>
+        <input type="password" id="suPassword" required placeholder="Minimum 6 characters">
+        <label>Confirm Password</label>
+        <input type="password" id="suConfirmPassword" required placeholder="••••••••">
+        <button class="btn" type="submit">Create Account</button>
+      </form>
+
+      <form id="authForgotForm" class="auth-view">
+        <p style="font-size:.88rem;color:var(--fg-soft);margin-bottom:12px;">Enter your email address and we'll send you a link to reset your password.</p>
+        <label>Email Address</label>
+        <input type="email" id="fEmail" required placeholder="you@example.com">
+        <button class="btn" type="submit">Send Reset Link</button>
+        <div class="auth-alt-actions">
+          Back to <button type="button" onclick="switchAuthView('signin')">Sign In</button>
+        </div>
+      </form>
+
+      <div class="auth-error" id="authError"></div>
+    </div>
+    <a class="back-home-link" href="/index.html">← Back to Jewish Kids Hub</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
+<script src="/firebase-init.js"></script>
+<script src="/site.js"></script>
+<script>
+auth.onAuthStateChanged(user=>{
+  if(user){ toast('You are already signed in!'); setTimeout(()=>location.href='/index.html', 800); }
+});
+
+function switchAuthView(view){
+  document.querySelectorAll('.auth-view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('authError').textContent = '';
+  document.getElementById('authTabs').style.display = 'flex';
+  if(view==='signin'){
+    document.getElementById('authSignInForm').classList.add('active');
+    document.getElementById('tabSignIn').classList.add('active');
+    document.getElementById('authTitle').textContent = 'Welcome Hub';
+    document.getElementById('authSub').textContent = "Sign in to save favorites and track what you're watching.";
+  } else if(view==='signup'){
+    document.getElementById('authSignUpForm').classList.add('active');
+    document.getElementById('tabSignUp').classList.add('active');
+    document.getElementById('authTitle').textContent = 'Create Account';
+    document.getElementById('authSub').textContent = 'Join Jewish Kids Hub — it only takes a minute.';
+  } else if(view==='forgot'){
+    document.getElementById('authForgotForm').classList.add('active');
+    document.getElementById('authTabs').style.display = 'none';
+    document.getElementById('authTitle').textContent = 'Reset Password';
+    document.getElementById('authSub').textContent = "We'll email you a link to get back in.";
+  }
+}
+
+function doGoogleSignIn(){
+  auth.signInWithPopup(googleProvider).then(result=>{
+    const user = result.user;
+    return db.ref('users/'+user.uid).once('value').then(snap=>{
+      if(!snap.exists()){
+        const [firstName, ...rest] = (user.displayName||'Friend').split(' ');
+        return db.ref('users/'+user.uid).set({
+          firstName, lastName: rest.join(' '), email: user.email, createdAt: Date.now(),
+          role:'member', photoURL: user.photoURL||'', favorites:{}, settings:{}
+        });
+      }
+    });
+  }).then(()=>{
+    toast('Signed in with Google!');
+    setTimeout(()=>location.href='/index.html', 700);
+  }).catch(err=> document.getElementById('authError').textContent = err.message);
+}
+
+document.getElementById('authSignInForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const em = document.getElementById('siEmail').value;
+  const pw = document.getElementById('siPassword').value;
+  auth.signInWithEmailAndPassword(em, pw)
+    .then(()=>{ toast('Successfully signed in!'); setTimeout(()=>location.href='/index.html', 700); })
+    .catch(err=> document.getElementById('authError').textContent = err.message);
+});
+
+document.getElementById('authSignUpForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const first = document.getElementById('suFirst').value;
+  const last = document.getElementById('suLast').value;
+  const em = document.getElementById('suEmail').value;
+  const pw = document.getElementById('suPassword').value;
+  const confirmPw = document.getElementById('suConfirmPassword').value;
+  if(pw !== confirmPw){ document.getElementById('authError').textContent = 'Passwords do not match!'; return; }
+  auth.createUserWithEmailAndPassword(em, pw)
+    .then(cred=> db.ref('users/'+cred.user.uid).set({
+      firstName:first, lastName:last, email:em, createdAt:Date.now(), role:'member', photoURL:'', favorites:{}, settings:{}
+    }))
+    .then(()=>{ toast('Account created successfully!'); setTimeout(()=>location.href='/index.html', 700); })
+    .catch(err=> document.getElementById('authError').textContent = err.message);
+});
+
+document.getElementById('authForgotForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const em = document.getElementById('fEmail').value;
+  const actionCodeSettings = {
+    url: window.location.origin + '/reset-password.html',
+    handleCodeInApp: true
+  };
+  auth.sendPasswordResetEmail(em, actionCodeSettings)
+    .then(()=>{ toast('Password reset link sent!'); switchAuthView('signin'); })
+    .catch(err=> document.getElementById('authError').textContent = err.message);
+});
+</script>
+</body>
+</html>

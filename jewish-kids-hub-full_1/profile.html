@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile — Jewish Kids Hub</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jewish-kids-hub-default-rtdb.asia-southeast1.firebasedatabase.app">
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .profile-header{display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:8px;}
+  .profile-avatar{width:76px; height:76px; border-radius:50%; object-fit:cover; background:var(--muted); border:3px solid #fff; box-shadow:var(--shadow); flex-shrink:0;}
+  .profile-name{font-size:1.3rem;}
+  .profile-email{color:var(--fg-soft); font-size:.85rem; margin-top:2px;}
+  .profile-since{color:var(--fg-soft); font-size:.78rem; margin-top:4px;}
+  .profile-section{background:var(--card); border:1px solid var(--muted); border-radius:18px; padding:22px 24px; box-shadow:var(--shadow); margin-top:18px; max-width:600px;}
+  .profile-section h3{font-size:1rem; margin-bottom:14px;}
+  .profile-note{font-size:.8rem; color:var(--fg-soft); background:var(--muted); border-radius:10px; padding:10px 14px; margin-top:10px;}
+  .my-comment-item{padding:12px 0; border-bottom:1px solid var(--muted); display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .my-comment-item:last-child{border-bottom:none;}
+  .my-comment-meta{font-size:.75rem; color:var(--fg-soft); margin-top:4px;}
+  .save-msg{font-size:.78rem; color:#2E7D4F; font-weight:700; margin-top:8px; min-height:14px;}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navinner">
+    <a class="navbrand" href="/index.html"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><span>Jewish Kids Hub</span></a>
+    <button id="navToggle">☰</button>
+    <div class="navlinks" id="navlinks">
+      <a href="/index.html" data-page="home">Home</a>
+      <a href="/kka.html" data-page="kka">Kids Kan Akomplish</a>
+      <a href="/nach-heroes.html" data-page="nach">Nach Heroes</a>
+      <a href="/halachos.html" data-page="halachos">Halachos</a>
+      <a href="/magazine.html" data-page="magazine">Magazine</a>
+      <a href="/moshiach.html" data-page="moshiach">Moshiach is in our hands</a>
+      <a href="/contact.html" data-page="contact">Contact</a>
+      <div class="nav-user-container" id="authNavContainer">
+        <button class="nav-signin-btn" id="navSignInBtn">👤 Sign In</button>
+        <div class="nav-user-menu" id="navUserMenu">
+          <a href="/profile.html">My Profile</a>
+          <button onclick="handleSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="page-enter">
+  <div class="wrap" style="padding-top:32px; padding-bottom:60px; max-width:680px;" id="profileWrap" style="display:none;">
+
+    <div class="profile-header">
+      <img class="profile-avatar" id="pAvatar" src="" alt="Your avatar">
+      <div>
+        <div class="profile-name" id="pName">—</div>
+        <div class="profile-email" id="pEmail">—</div>
+        <div class="profile-since" id="pSince"></div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <h3>Edit Profile</h3>
+      <div class="form-row">
+        <div><label>First Name</label><input id="f-firstName"></div>
+        <div><label>Last Name</label><input id="f-lastName"></div>
+      </div>
+      <div style="margin-bottom:14px;"><label>Profile Photo URL</label>
+        <div class="img-upload-row" style="display:flex; gap:8px;">
+          <input id="f-photoURL" placeholder="https://... (optional)" style="flex:1;">
+          <input type="file" accept="image/*" id="f-upload-photoURL" style="display:none" onchange="handleImageUpload(this, 'f-photoURL', 'pAvatar')">
+          <button type="button" class="btn secondary" style="padding:10px 16px; flex-shrink:0;" onclick="document.getElementById('f-upload-photoURL').click()">⬆ Upload</button>
+        </div>
+      </div>
+      <button class="btn btn-sm" style="padding:10px 22px;" onclick="saveProfile()">Save Changes</button>
+      <div class="save-msg" id="profileSaveMsg"></div>
+    </div>
+
+    <div class="profile-section" id="passwordSection">
+      <h3>Change Password</h3>
+      <div id="passwordFormWrap">
+        <div style="margin-bottom:14px;"><label>Current Password</label><input type="password" id="f-currentPassword"></div>
+        <div style="margin-bottom:14px;"><label>New Password</label><input type="password" id="f-newPassword" placeholder="Minimum 6 characters"></div>
+        <button class="btn btn-sm" style="padding:10px 22px;" onclick="changePassword()">Update Password</button>
+        <div class="save-msg" id="passwordSaveMsg"></div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <h3>My Children</h3>
+      <p class="form-note" style="margin-top:-8px; margin-bottom:14px;">Add your kids here so they can answer questions under KKA episodes.</p>
+      <div id="childrenList" style="margin-bottom:14px;"></div>
+      <button class="btn btn-sm" style="padding:10px 18px;" onclick="openAddChildModal()">+ Add a Child</button>
+    </div>
+
+    <div class="profile-section">
+      <h3>My Comments</h3>
+      <div id="myCommentsList"><p style="color:var(--fg-soft); font-size:.85rem;">Loading…</p></div>
+    </div>
+
+    <button class="btn secondary" style="margin-top:22px;" onclick="handleSignOut()">Sign Out</button>
+  </div>
+
+  <div class="wrap" id="profileLoading" style="padding:60px 24px; text-align:center; color:var(--fg-soft);">Loading your profile…</div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><strong>Jewish Kids Hub</strong></div>
+        <p>Where Yiddishe kinderlach discover the special koach Hashem gave them to fill the world with Torah and light.</p>
+        <p style="margin-top:6px;">✉ jewishkidshub@gmail.com</p>
+      </div>
+      <div>
+        <h4>Our Departments</h4>
+        <a href="/index.html">Home</a>
+        <a href="/moshiach.html">Moshiach is in our Hands</a>
+        <a href="/magazine.html">Magazine</a>
+        <a href="/kka.html">Kids Kan Akomplish</a>
+        <a href="/halachos.html">Halachos For Kids</a>
+        <a href="/nach-heroes.html">Nach Heroes</a>
+        <a href="/contact.html">Contact Us</a>
+      </div>
+      <div>
+        <h4>Join Our Mailing List</h4>
+        <p>Sign up for the Jewish Kids Hub Mailing List and never miss an update!</p>
+        <form class="foot-form" id="notifForm">
+          <input type="email" placeholder="Your email" required id="notifEmail">
+          <button class="btn" type="submit" style="padding:10px 18px;">➤</button>
+        </form>
+        <a class="foot-link-cta" href="/contact.html" style="margin-top:14px;">Send us a message →</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 5786 Jewish Kids Hub. All rights reserved. <a href="/privacy-policy.html" style="color:inherit;">Privacy Policy</a> · <a href="/terms-of-service.html" style="color:inherit;">Terms of Service</a></span>
+      <span>Made with <span class="heartbeat">♥</span> for Yiddishe Kinderlach</span>
+    </div>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="/firebase-init.js"></script>
+<script src="/cloudinary-config.js"></script>
+<script>window.CURRENT_PAGE = 'profile';</script>
+<script src="/site.js"></script>
+<script>
+let profileUser = null;
+
+auth.onAuthStateChanged(user=>{
+  if(!user){
+    location.href='/login.html';
+    return;
+  }
+  profileUser = user;
+  document.getElementById('profileLoading').style.display = 'none';
+  document.getElementById('profileWrap').style.display = 'block';
+  document.getElementById('pEmail').textContent = user.email || '';
+
+  // Google-only accounts don't have a password to change
+  const hasPasswordProvider = user.providerData.some(p => p.providerId === 'password');
+  if(!hasPasswordProvider){
+    document.getElementById('passwordFormWrap').innerHTML = `<p class="profile-note">You signed in with Google, so your password is managed by Google — there's nothing to change here.</p>`;
+  }
+
+  db.ref('users/'+user.uid).once('value').then(snap=>{
+    const p = snap.val() || {};
+    document.getElementById('pAvatar').src = p.photoURL || user.photoURL || 'favicon.png';
+    document.getElementById('pName').textContent = [p.firstName, p.lastName].filter(Boolean).join(' ') || (user.displayName || 'Member');
+    document.getElementById('pSince').textContent = p.createdAt ? `Member since ${new Date(p.createdAt).toLocaleDateString(undefined,{month:'long', year:'numeric'})}` : '';
+    document.getElementById('f-firstName').value = p.firstName || '';
+    document.getElementById('f-lastName').value = p.lastName || '';
+    document.getElementById('f-photoURL').value = p.photoURL || '';
+  });
+
+  loadMyComments(user.uid);
+  loadChildren(user.uid);
+});
+
+function saveProfile(){
+  const data = {
+    firstName: document.getElementById('f-firstName').value.trim(),
+    lastName: document.getElementById('f-lastName').value.trim(),
+    photoURL: document.getElementById('f-photoURL').value.trim(),
+  };
+  db.ref('users/'+profileUser.uid).update(data).then(()=>{
+    document.getElementById('pName').textContent = [data.firstName, data.lastName].filter(Boolean).join(' ') || 'Member';
+    if(data.photoURL) document.getElementById('pAvatar').src = data.photoURL;
+    document.getElementById('profileSaveMsg').textContent = 'Saved!';
+    setTimeout(()=> document.getElementById('profileSaveMsg').textContent = '', 2500);
+  }).catch(err=> toast(err.message));
+}
+
+function changePassword(){
+  const current = document.getElementById('f-currentPassword').value;
+  const next = document.getElementById('f-newPassword').value;
+  const msgEl = document.getElementById('passwordSaveMsg');
+  msgEl.style.color = '#2E7D4F';
+  if(!current || !next){ msgEl.style.color = 'var(--accent)'; msgEl.textContent = 'Fill in both fields.'; return; }
+  if(next.length < 6){ msgEl.style.color = 'var(--accent)'; msgEl.textContent = 'New password must be at least 6 characters.'; return; }
+
+  const cred = firebase.auth.EmailAuthProvider.credential(profileUser.email, current);
+  profileUser.reauthenticateWithCredential(cred)
+    .then(()=> profileUser.updatePassword(next))
+    .then(()=>{
+      msgEl.textContent = 'Password updated!';
+      document.getElementById('f-currentPassword').value = '';
+      document.getElementById('f-newPassword').value = '';
+      setTimeout(()=> msgEl.textContent = '', 3000);
+    })
+    .catch(err=>{ msgEl.style.color = 'var(--accent)'; msgEl.textContent = err.message; });
+}
+
+function loadChildren(uid){
+  db.ref('users/'+uid+'/children').on('value', snap=>{
+    const kids = snapToArray(snap);
+    document.getElementById('childrenList').innerHTML = kids.length ? kids.map(k=>`
+      <div class="child-card">
+        ${childAvatarHtml(k)}
+        <div class="child-info">
+          <div class="child-name-row">
+            <span class="child-name">${escHtml(k.firstName || k.name)}${k.lastName ? ' '+escHtml(k.lastName) : ''}</span>
+            ${k.age != null ? `<span class="child-age-pill">Age ${k.age}</span>` : ''}
+          </div>
+          ${(k.hebrewBirthdayDay && k.hebrewBirthdayMonth) ? `<div class="child-bday">Hebrew birthday: ${k.hebrewBirthdayDay} ${escHtml(k.hebrewBirthdayMonth)}</div>` : ''}
+        </div>
+        <button class="child-remove-btn" onclick="deleteChild('${uid}','${k.id}')">Remove</button>
+      </div>`).join('') : `<p style="color:var(--fg-soft); font-size:.85rem;">No children added yet.</p>`;
+  });
+}
+function deleteChild(uid, childId){
+  if(confirm('Remove this child? Their past answers will stay on file but they won\'t appear in your list anymore.')){
+    db.ref('users/'+uid+'/children/'+childId).remove().catch(err=> toast(err.message));
+  }
+}
+
+function loadMyComments(uid){
+  db.ref('comments').on('value', snap=>{
+    const mine = snapToArray(snap).filter(c=>c.uid===uid).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    const el = document.getElementById('myCommentsList');
+    el.innerHTML = mine.length ? mine.map(c=>`
+      <div class="my-comment-item">
+        <div>
+          <div>${escHtml(c.text||'')}</div>
+          <div class="my-comment-meta">${escHtml(c.onType||'')} · ${c.approved ? '<span style="color:#2E7D4F;font-weight:700;">Approved</span>' : '<span style="color:var(--accent);font-weight:700;">Pending review</span>'}</div>
+        </div>
+        <button class="icon-btn-del" style="border:1px solid var(--muted); background:#fff; border-radius:8px; padding:5px 9px; font-size:12px; color:var(--accent); flex-shrink:0;" onclick="deleteMyComment('${c.id}')">Delete</button>
+      </div>`).join('') : `<p style="color:var(--fg-soft); font-size:.85rem;">You haven't posted any comments yet.</p>`;
+  });
+}
+function deleteMyComment(id){
+  if(confirm('Delete this comment?')) db.ref('comments/'+id).remove().catch(err=> toast(err.message));
+}
+</script>
+</body>
+</html>

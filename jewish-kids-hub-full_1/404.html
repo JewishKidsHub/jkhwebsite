@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — Jewish Kids Hub</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jewish-kids-hub-default-rtdb.asia-southeast1.firebasedatabase.app">
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .nf-shell{position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; text-align:center; padding:40px 24px;}
+  .nf-card{position:relative; z-index:1; max-width:480px;}
+  .nf-logo{width:84px; height:84px; border-radius:50%; margin:0 auto 22px; box-shadow:var(--shadow); animation:floaty 4s ease-in-out infinite;}
+  .nf-code{font-family:'Fredoka'; font-size:clamp(3.5rem,10vw,5.5rem); color:var(--primary); line-height:1; margin-bottom:6px;}
+  .nf-title{font-size:clamp(1.4rem,3vw,1.8rem); margin-bottom:12px;}
+  .nf-sub{color:var(--fg-soft); font-size:1.02rem; line-height:1.6; margin-bottom:30px;}
+  .nf-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+</style>
+</head>
+<body>
+
+<div class="nf-shell">
+  <div class="orb o1" style="width:340px;height:340px;background:var(--primary);top:-120px;left:-100px;"></div>
+  <div class="orb o2" style="width:280px;height:280px;background:var(--secondary);bottom:-110px;right:-70px;"></div>
+
+  <div class="nf-card page-enter">
+    <img class="nf-logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo">
+    <div class="nf-code">404</div>
+    <h1 class="nf-title">Oy, this page wandered off!</h1>
+    <p class="nf-sub">We couldn't find the page you were looking for. Maybe it's out on a scavenger hunt of its own — let's get you back to safety.</p>
+    <div class="nf-actions">
+      <a class="btn" href="/index.html">Back to Home</a>
+      <a class="btn secondary" href="/contact.html">Let us know</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="/firebase-init.js"></script>
+<script src="/site.js"></script>
+</body>
+</html>

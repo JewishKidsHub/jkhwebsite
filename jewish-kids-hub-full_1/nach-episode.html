@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nach Heroes — Jewish Kids Hub</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://jewish-kids-hub-default-rtdb.asia-southeast1.firebasedatabase.app">
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="navbar">
+  <div class="navinner">
+    <a class="navbrand" href="/index.html"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><span>Jewish Kids Hub</span></a>
+    <button id="navToggle">☰</button>
+    <div class="navlinks" id="navlinks">
+      <a href="/index.html" data-page="home">Home</a>
+      <a href="/kka.html" data-page="kka">Kids Kan Akomplish</a>
+      <a href="/nach-heroes.html" data-page="nach">Nach Heroes</a>
+      <a href="/halachos.html" data-page="halachos">Halachos</a>
+      <a href="/magazine.html" data-page="magazine">Magazine</a>
+      <a href="/moshiach.html" data-page="moshiach">Moshiach is in our hands</a>
+      <a href="/contact.html" data-page="contact">Contact</a>
+      <div class="nav-user-container" id="authNavContainer">
+        <button class="nav-signin-btn" id="navSignInBtn">👤 Sign In</button>
+        <div class="nav-user-menu" id="navUserMenu">
+          <a href="/profile.html">My Profile</a>
+          <button onclick="handleSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="page-enter">
+  <div class="wrap" id="nachEpisodeWrap" style="padding-top:32px; padding-bottom:64px; display:none;">
+    <a class="detail-back" href="/nach-heroes.html">← Back to all heroes</a>
+    <div class="detail-video" id="nachVideoBox"></div>
+    <h2 class="h2" id="nachDetTitle"></h2>
+    <p class="lede" id="nachDetSynopsis"></p>
+    <div id="nachComments" style="margin-top:36px;"></div>
+  </div>
+
+  <div class="wrap" id="nachNotFound" style="display:none; padding:60px 24px;">
+    <div class="empty-state">
+      <div class="icon">🛡️</div>
+      <h3>Episode not found</h3>
+      <p>This episode may have been removed, or the link isn't quite right.</p>
+      <a class="btn btn-primary" href="/nach-heroes.html" style="display:inline-block; margin-top:18px;">See all heroes</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><img data-imgkey="logo" src="https://drive.google.com/thumbnail?id=1i_sr5gaLwVl0U4XG12HctE2o0ya6cAA7&sz=w1000" alt="Jewish Kids Hub logo"><strong>Jewish Kids Hub</strong></div>
+        <p>Where Yiddishe kinderlach discover the special koach Hashem gave them to fill the world with Torah and light.</p>
+        <p style="margin-top:6px;">✉ jewishkidshub@gmail.com</p>
+      </div>
+      <div>
+        <h4>Our Departments</h4>
+        <a href="/index.html">Home</a>
+        <a href="/moshiach.html">Moshiach is in our Hands</a>
+        <a href="/magazine.html">Magazine</a>
+        <a href="/kka.html">Kids Kan Akomplish</a>
+        <a href="/halachos.html">Halachos For Kids</a>
+        <a href="/nach-heroes.html">Nach Heroes</a>
+        <a href="/contact.html">Contact Us</a>
+      </div>
+      <div>
+        <h4>Join Our Mailing List</h4>
+        <p>Sign up for the Jewish Kids Hub Mailing List and never miss an update!</p>
+        <form class="foot-form" id="notifForm">
+          <input type="email" placeholder="Your email" required id="notifEmail">
+          <button class="btn" type="submit" style="padding:10px 18px;">➤</button>
+        </form>
+        <a class="foot-link-cta" href="/contact.html" style="margin-top:14px;">Send us a message →</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 5786 Jewish Kids Hub. All rights reserved. <a href="/privacy-policy.html" style="color:inherit;">Privacy Policy</a> · <a href="/terms-of-service.html" style="color:inherit;">Terms of Service</a></span>
+      <span>Made with <span class="heartbeat">♥</span> for Yiddishe Kinderlach</span>
+    </div>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="/firebase-init.js"></script>
+<script>window.CURRENT_PAGE = 'nach';</script>
+<script src="/site.js"></script>
+<script>
+const nachId = getIdFromUrl('nach');
+let currentHero = null;
+
+function loadHero(){
+  if(!nachId){ showNotFound(); return; }
+  db.ref('videos').once('value').then(snap=>{
+    const all = snapToArray(snap).filter(v=>v.series==='nach');
+    const v = findBySlugOrId(all, nachId);
+    if(!v){ showNotFound(); return; }
+    currentHero = v;
+    renderHero();
+  }).catch(showNotFound);
+}
+
+function renderHero(){
+  const v = currentHero;
+  document.title = `${v.title || 'Episode'} — Nach Heroes — Jewish Kids Hub`;
+
+  if(isBeforeRelease(v)){
+    document.getElementById('nachEpisodeWrap').style.display = 'none';
+    document.getElementById('nachNotFound').style.display = 'block';
+    document.querySelector('#nachNotFound h3').textContent = 'Not available yet';
+    const releaseStr = new Date(v.releaseAt).toLocaleString(undefined,{dateStyle:'long', timeStyle:'short'});
+    document.querySelector('#nachNotFound p').textContent = `This episode isn't available yet — check back on ${releaseStr}.`;
+    const btn = document.querySelector('#nachNotFound .btn');
+    btn.textContent = 'See all heroes';
+    btn.href = '/nach-heroes.html';
+    return;
+  }
+
+  if(isMembersOnlyLocked(v)){
+    document.getElementById('nachEpisodeWrap').style.display = 'none';
+    document.getElementById('nachNotFound').style.display = 'block';
+    document.querySelector('#nachNotFound h3').textContent = 'Members only';
+    document.querySelector('#nachNotFound p').textContent = 'This episode is reserved for signed-in members — sign in to watch it.';
+    const btn = document.querySelector('#nachNotFound .btn');
+    btn.textContent = 'Sign In';
+    btn.href = '/login.html';
+    return;
+  }
+
+  document.getElementById('nachVideoBox').innerHTML = ytEmbedHtml(v.youtubeId, v.thumbnailUrl, v.title);
+  document.getElementById('nachDetTitle').textContent = v.title || '';
+  document.getElementById('nachDetSynopsis').textContent = v.synopsis || '';
+  initCommentsSection(document.getElementById('nachComments'), 'video', v.id);
+
+  document.getElementById('nachEpisodeWrap').style.display = 'block';
+  document.getElementById('nachNotFound').style.display = 'none';
+}
+
+function showNotFound(){
+  document.getElementById('nachEpisodeWrap').style.display = 'none';
+  document.getElementById('nachNotFound').style.display = 'block';
+}
+
+onAuthChange(()=>{ if(currentHero) renderHero(); });
+loadHero();
+</script>
+</body>
+</html>

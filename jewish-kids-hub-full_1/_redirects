@@ -1,0 +1,4 @@
+/10  /10.html  200
+/kka/episode/*  /kka-episode.html?id=:splat  200
+/nach/episode/*  /nach-episode.html?id=:splat  200
+/halachos/article/*  /halacha-article.html?id=:splat  200
